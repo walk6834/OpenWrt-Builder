@@ -1,2 +1,8 @@
 doc
 .DS_Store
+
+.vscode/
+.idea/
+.trae/
+
+.claude/settings.local.json
