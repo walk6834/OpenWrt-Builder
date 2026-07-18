@@ -79,7 +79,16 @@ jobs:
           echo "CONFIG_TARGET_x86=y" >> .config
           echo "CONFIG_TARGET_x86_64=y" >> .config
           make defconfig
-          cp .config immortalwrt-${{matrix.type}}-default.config
+
+      - name: Load custom configuration
+        run: |
+          cd openwrt
+          ./diy-part2-${{matrix.type}}.sh
+
+      - name: Generate custom configuration
+        run: |
+          cd openwrt
+          ./scripts/diffconfig.sh > immortalwrt-${{matrix.type}}-default.config
 
       - name: Upload default configuration to artifact
         uses: actions/upload-artifact@main
@@ -87,11 +96,6 @@ jobs:
           name: immortalwrt-${{matrix.type}}-default.config
           path: openwrt/immortalwrt-${{matrix.type}}-default.config
           retention-days: 3
-
-      - name: Load custom configuration
-        run: |
-          cd openwrt
-          ./diy-part2-${{matrix.type}}.sh
 
       - name: Download package
         id: package
