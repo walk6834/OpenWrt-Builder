@@ -10,6 +10,34 @@
 # See /LICENSE for more information.
 #
 
+function config_del() {
+	yes="CONFIG_$1=y"
+	no="# CONFIG_$1 is not set"
+
+	sed -i "s/$yes/$no/" .config
+}
+
+function config_add() {
+	yes="CONFIG_$1=y"
+	no="# CONFIG_$1 is not set"
+
+	sed -i "s/${no}/${yes}/" .config
+
+	if ! grep -q "$yes" .config; then
+		echo "$yes" >>.config
+	fi
+}
+
+function config_package_del() {
+	package="PACKAGE_$1"
+	config_del $package
+}
+
+function config_package_add() {
+	package="PACKAGE_$1"
+	config_add $package
+}
+
 function drop_package() {
 	if [ "$1" != "golang" ]; then
 		# feeds/base -> package

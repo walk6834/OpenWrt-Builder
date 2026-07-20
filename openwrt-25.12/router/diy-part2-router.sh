@@ -107,7 +107,7 @@ config_package_add nano
 # upnp
 config_package_add luci-app-upnp
 # autoreboot
-config_package_add luci-app-autoreboot
+#config_package_add luci-app-autoreboot
 # python3
 #config_package_add python3
 #config_package_add python3-base
@@ -115,9 +115,9 @@ config_package_add luci-app-autoreboot
 # tty 终端
 config_package_add luci-app-ttyd
 # docker
-# config_package_add luci-app-dockerman
+config_package_add luci-app-dockerman
 # kms
-# config_package_add luci-app-vlmcsd
+config_package_add luci-app-vlmcsd
 # usb 2.0 3.0 支持
 config_package_add kmod-usb2
 config_package_add kmod-usb3
@@ -167,7 +167,7 @@ config_package_add luci-app-partexp
 ## iStore 应用市场
 #config_package_add luci-app-store
 ## qmodem 4G/5G 支持
-# config_package_add luci-app-qmodem-next
+config_package_add luci-app-qmodem-next
 ## luci-app-easytier
 config_package_add luci-app-easytier
 config_package_add easytier
@@ -177,7 +177,7 @@ config_package_add easytier
 sed -i "/CONFIG_TARGET_KERNEL_PARTSIZE/d" .config
 echo "CONFIG_TARGET_KERNEL_PARTSIZE=32" >>.config
 sed -i "/CONFIG_TARGET_ROOTFS_PARTSIZE/d" .config
-echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1024" >>.config
+echo "CONFIG_TARGET_ROOTFS_PARTSIZE=2048" >>.config
 # 调整 GRUB_TIMEOUT
 sed -i "s/CONFIG_GRUB_TIMEOUT=\"3\"/CONFIG_GRUB_TIMEOUT=\"1\"/" .config
 ## 不生成 EXT4 硬盘格式镜像
