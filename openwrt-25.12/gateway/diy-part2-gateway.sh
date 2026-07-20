@@ -10,21 +10,19 @@
 # See /LICENSE for more information.
 #
 
-
-function drop_package(){
-    if [ "$1" != "golang" ];then
-        # feeds/base -> package
-        find package/ -follow -name $1 -not -path "package/custom/*" | xargs -rt rm -rf
-        find feeds/ -follow -name $1 -not -path "feeds/base/custom/*" | xargs -rt rm -rf
-    fi
+function drop_package() {
+	if [ "$1" != "golang" ]; then
+		# feeds/base -> package
+		find package/ -follow -name $1 -not -path "package/custom/*" | xargs -rt rm -rf
+		find feeds/ -follow -name $1 -not -path "feeds/base/custom/*" | xargs -rt rm -rf
+	fi
 }
-function clean_packages(){
-    path=$1
-    dir=$(ls -l ${path} | awk '/^d/ {print $NF}')
-    for item in ${dir}
-        do
-            drop_package ${item}
-        done
+function clean_packages() {
+	path=$1
+	dir=$(ls -l ${path} | awk '/^d/ {print $NF}')
+	for item in ${dir}; do
+		drop_package ${item}
+	done
 }
 
 # Add the default password for the 'root' user（Change the empty password to 'password'）
@@ -138,7 +136,7 @@ config_package_add luci-app-upnp
 
 # 第三方软件包
 mkdir -p package/custom
-git clone -b openwrt-25.12 --single-branch --depth 1  https://github.com/217heidai/OpenWrt-Packages.git package/custom
+git clone -b openwrt-25.12 --single-branch --depth 1 https://github.com/217heidai/OpenWrt-Packages.git package/custom
 clean_packages package/custom
 ## golang
 rm -rf feeds/packages/lang/golang
@@ -171,9 +169,9 @@ config_package_add easytier
 # 镜像生成
 # 修改分区大小
 sed -i "/CONFIG_TARGET_KERNEL_PARTSIZE/d" .config
-echo "CONFIG_TARGET_KERNEL_PARTSIZE=32" >> .config
+echo "CONFIG_TARGET_KERNEL_PARTSIZE=32" >>.config
 sed -i "/CONFIG_TARGET_ROOTFS_PARTSIZE/d" .config
-echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1024" >> .config
+echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1024" >>.config
 # 调整 GRUB_TIMEOUT
 sed -i "s/CONFIG_GRUB_TIMEOUT=\"3\"/CONFIG_GRUB_TIMEOUT=\"1\"/" .config
 ## 不生成 EXT4 硬盘格式镜像

@@ -10,48 +10,47 @@
 # See /LICENSE for more information.
 #
 
-function config_del(){
-    yes="CONFIG_$1=y"
-    no="# CONFIG_$1 is not set"
+function config_del() {
+	yes="CONFIG_$1=y"
+	no="# CONFIG_$1 is not set"
 
-    sed -i "s/$yes/$no/" .config
+	sed -i "s/$yes/$no/" .config
 }
 
-function config_add(){
-    yes="CONFIG_$1=y"
-    no="# CONFIG_$1 is not set"
+function config_add() {
+	yes="CONFIG_$1=y"
+	no="# CONFIG_$1 is not set"
 
-    sed -i "s/${no}/${yes}/" .config
+	sed -i "s/${no}/${yes}/" .config
 
-    if ! grep -q "$yes" .config; then
-        echo "$yes" >> .config
-    fi
+	if ! grep -q "$yes" .config; then
+		echo "$yes" >>.config
+	fi
 }
 
-function config_package_del(){
-    package="PACKAGE_$1"
-    config_del $package
+function config_package_del() {
+	package="PACKAGE_$1"
+	config_del $package
 }
 
-function config_package_add(){
-    package="PACKAGE_$1"
-    config_add $package
+function config_package_add() {
+	package="PACKAGE_$1"
+	config_add $package
 }
 
-function drop_package(){
-    if [ "$1" != "golang" ];then
-        # feeds/base -> package
-        find package/ -follow -name $1 -not -path "package/custom/*" | xargs -rt rm -rf
-        find feeds/ -follow -name $1 -not -path "feeds/base/custom/*" | xargs -rt rm -rf
-    fi
+function drop_package() {
+	if [ "$1" != "golang" ]; then
+		# feeds/base -> package
+		find package/ -follow -name $1 -not -path "package/custom/*" | xargs -rt rm -rf
+		find feeds/ -follow -name $1 -not -path "feeds/base/custom/*" | xargs -rt rm -rf
+	fi
 }
-function clean_packages(){
-    path=$1
-    dir=$(ls -l ${path} | awk '/^d/ {print $NF}')
-    for item in ${dir}
-        do
-            drop_package ${item}
-        done
+function clean_packages() {
+	path=$1
+	dir=$(ls -l ${path} | awk '/^d/ {print $NF}')
+	for item in ${dir}; do
+		drop_package ${item}
+	done
 }
 
 # Add the default password for the 'root' user（Change the empty password to 'password'）
@@ -176,9 +175,9 @@ config_package_add easytier
 # 镜像生成
 # 修改分区大小
 sed -i "/CONFIG_TARGET_KERNEL_PARTSIZE/d" .config
-echo "CONFIG_TARGET_KERNEL_PARTSIZE=32" >> .config
+echo "CONFIG_TARGET_KERNEL_PARTSIZE=32" >>.config
 sed -i "/CONFIG_TARGET_ROOTFS_PARTSIZE/d" .config
-echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1024" >> .config
+echo "CONFIG_TARGET_ROOTFS_PARTSIZE=1024" >>.config
 # 调整 GRUB_TIMEOUT
 sed -i "s/CONFIG_GRUB_TIMEOUT=\"3\"/CONFIG_GRUB_TIMEOUT=\"1\"/" .config
 ## 不生成 EXT4 硬盘格式镜像

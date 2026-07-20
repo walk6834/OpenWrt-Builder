@@ -19,4 +19,4 @@ sed -i 's,noinitrd,noinitrd mitigations=off,g' target/linux/x86/image/grub-iso.c
 sed -i 's,noinitrd,noinitrd mitigations=off,g' target/linux/x86/image/grub-pc.cfg
 
 # QModem
-echo 'src-git qmodem https://github.com/FUjr/QModem.git;main' >> feeds.conf.default
+echo 'src-git qmodem https://github.com/FUjr/QModem.git;main' >>feeds.conf.default
