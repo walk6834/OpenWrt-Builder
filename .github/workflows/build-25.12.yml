@@ -73,13 +73,6 @@ jobs:
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
 
-      - name: Generate default configuration
-        run: |
-          cd openwrt
-          echo "CONFIG_TARGET_x86=y" >> .config
-          echo "CONFIG_TARGET_x86_64=y" >> .config
-          make defconfig
-
       - name: Load custom configuration
         run: |
           cd openwrt
@@ -88,6 +81,7 @@ jobs:
       - name: Generate custom configuration
         run: |
           cd openwrt
+          cp -f default.config .config
           make defconfig
           ./scripts/diffconfig.sh > immortalwrt-${{matrix.type}}-default.config
 
