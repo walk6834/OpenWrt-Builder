@@ -88,6 +88,7 @@ jobs:
       - name: Generate custom configuration
         run: |
           cd openwrt
+          make defconfig
           ./scripts/diffconfig.sh > immortalwrt-${{matrix.type}}-default.config
 
       - name: Upload default configuration to artifact
@@ -101,8 +102,7 @@ jobs:
         id: package
         run: |
           cd openwrt
-          make defconfig
-          make download -j8
+          make download -j $(($(nproc)+1))
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
@@ -122,7 +122,7 @@ jobs:
       - name: Organize compiled firmware
         if: steps.compile.outputs.status == 'success' && !cancelled()
         run: |
-          cp -rf openwrt/.config openwrt/bin/targets/x86/64/config
+          cp -rf openwrt/immortalwrt-${{matrix.type}}-default.config openwrt/bin/targets/x86/64/
           cd openwrt/bin/targets/x86/64
           rm -rf *.buildinfo
           rm -rf profiles.json
@@ -134,7 +134,6 @@ jobs:
           rm -rf immortalwrt-x86-64-generic-targz-combined-efi.img.gz
           rm -rf immortalwrt-x86-64-generic-targz-rootfs.img.gz
           rm -rf immortalwrt-x86-64-generic-targz-rootfs.tar.gz
-          mv config immortalwrt-${{matrix.type}}.config
           mv immortalwrt-x86-64-generic-rootfs.tar.gz immortalwrt-${{matrix.type}}-generic-rootfs-x86_64-25.12-${{env.COMPILE_TIME}}.tar.gz
           mv immortalwrt-x86-64-generic-squashfs-combined-efi.img.gz immortalwrt-${{matrix.type}}-generic-squashfs-combined-efi-x86_64-25.12-${{env.COMPILE_TIME}}.img.gz
 
